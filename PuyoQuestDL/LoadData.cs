@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace puyoQuestDL
+namespace puyoQuestDL.PuyoQuestDL
 {
     public class MasterDataMap
     {

@@ -1,12 +1,11 @@
-﻿using System.Net;
-using System.Text;
+﻿using System.Text;
 using System.Text.Json;
 
-namespace puyoQuestDL
+namespace puyoQuestDL.PuyoQuestDL
 {
     class PuyoQuestDL
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             if (args.Length != 2)
             {
@@ -20,22 +19,19 @@ namespace puyoQuestDL
             string json;
 
             using (StreamReader r = new(jsonF))
-            {
                 json = r.ReadToEnd();
-            }
 
             LoadData loadData = JsonSerializer.Deserialize<LoadData>(json);
 
             StringBuilder sb = new();
 
             string url;
-
-            WebClient webClient = new();
+            string fileName;
             for (int i = 0; i < loadData.master_data_map.master_archive_data_array.Length; i++)
             {
                 url = loadData.master_data_map.master_archive_data_array[i].archive_url;
 
-                string fileName = url.Replace("https://pyq-cf-dl.sega-net.jp/", string.Empty);
+                fileName = url.Replace("https://pyq-cf-dl.sega-net.jp/", string.Empty);
 
                 sb.Clear();
 
@@ -43,8 +39,7 @@ namespace puyoQuestDL
                 sb.Append('\\');
                 sb.Append(fileName);
 
-                Console.WriteLine("Downloading " + url);
-                webClient.DownloadFile(url, sb.ToString());
+                await HttpHelper.DownloadFileAsync(url, sb.ToString());
             }
 
             Console.WriteLine("\nDone!");
